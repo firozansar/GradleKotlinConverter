@@ -1,0 +1,109 @@
+[versions]
+# App config versions
+compileSdk = "31"
+minSdk = "23"
+targetSdk = "31"
+contentDemoAppVersionName = "0.1.0"
+contentLibraryVersionName = "0.1.0"
+kotlinVersion = "1.6.10"
+
+# Plugin versions
+androidGradlePluginVersion = "7.2.1"
+
+#Lib versions
+androidLifecycleKtxVersion = "2.4.1"
+
+coreKtxVersion = "1.7.0"
+coroutinesVersion = "1.5.2"
+moshiVersion = "1.13.0"
+
+composeVersion = "1.1.1"
+composeActivityVersion = "1.4.0"
+composeNavigationVersion = "2.4.1"
+composeCompilerVersion = "1.1.0-rc02"
+constraintlayoutVersion = "1.0.1"
+
+daggerVersion = "2.40.5"
+
+rxJavaVersion = "3.1.2"
+rxAndroidVersion = "3.0.0"
+
+dokkaVersion = "1.6.10"
+detektVersion = "1.19.0"
+
+consumersVersion = "0.15.0"
+commonsVersion = "0.3.7"
+
+#Testing versions
+junit5Version = "5.8.1"
+extJUnitVersion = "1.1.3"
+mockKVersion = "1.12.2"
+androidXTestVersion = "1.4.0"
+orchestratorVersion = "1.4.1"
+espressoVersion = "3.4.0"
+
+# Desugaring versions
+desugarJdkVersion = "1.1.5"
+
+
+[libraries]
+androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "composeActivityVersion" }
+androidx-appcompat = "androidx.appcompat:appcompat:1.4.1"
+androidx-coreKtx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+androidx-lifecycleKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidLifecycleKtxVersion" }
+
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "composeVersion" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "composeVersion" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "composeVersion" }
+compose-constraintlayout = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutVersion" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigationVersion" }
+compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeVersion" }
+compose-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
+
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
+coroutines-rx3 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3", version.ref = "coroutinesVersion" }
+
+moshi = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiVersion" }
+moshiCodeGen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiVersion" }
+
+rxJava = { module = "io.reactivex.rxjava3:rxjava", version.ref = "rxJavaVersion" }
+rxAndroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxAndroidVersion" }
+
+consumers = { module = "com.comparethemarket.library:consumers", version.ref = "consumersVersion" }
+commonFramework = { module = "com.comparethemarket.library:common-framework", version.ref = "commonsVersion" }
+
+#Dagger
+dagger-runtime = { module = "com.google.dagger:dagger", version.ref = "daggerVersion" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "daggerVersion" }
+dagger-hilt-runtime = { module = "com.google.dagger:hilt-android", version.ref = "daggerVersion" }
+dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "daggerVersion" }
+dagger-hilt-navigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-rc01"
+
+# Desugar libraries
+desugarJdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkVersion" }
+
+# Unit testing
+junit5Api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5Version" }
+junit5Engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5Version" }
+junit5Params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5Version" }
+junitVintageEngine = { module="org.junit.vintage:junit-vintage-engine", version.ref = "junit5Version" }
+extJUnit = { module = "androidx.test.ext:junit", version.ref = "extJUnitVersion" }
+kotlinxCoroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesVersion" }
+mockK = { module = "io.mockk:mockk", version.ref = "mockKVersion" }
+
+# Android testing
+espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoVersion" }
+androidTestRunner = { module = "androidx.test:runner", version.ref = "androidXTestVersion" }
+androidTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidXTestVersion" }
+androidTestMonitor = { module = "androidx.test:monitor", version.ref = "androidXTestVersion" }
+mockKAndroid = { module = "io.mockk:mockk-android", version.ref = "mockKVersion" }
+mockKAgentJvm = { module = "io.mockk:mockk-agent-jvm", version.ref = "mockKVersion" }
+
+# Gradle plugins
+plugin-androidTools = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePluginVersion" }
+plugin-kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+plugin-hiltAndroidGradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "daggerVersion" }
+
+[bundles]
+daggerRuntimes = ["dagger-runtime", "dagger-hilt-runtime"]
+daggerCompilers = ["dagger-compiler", "dagger-hilt-compiler"]
