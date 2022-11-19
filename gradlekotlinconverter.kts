@@ -252,7 +252,7 @@ fun String.convertCompileToImplementation(): String {
 fun String.convertDependencies(): String {
 
     val testKeywords = "testImplementation|androidTestImplementation|debugImplementation|compileOnly|testCompileOnly|runtimeOnly|developmentOnly"
-    val gradleKeywords = "($testKeywords|implementation|api|annotationProcessor|classpath|kaptTest|kaptAndroidTest|kapt|check)".toRegex()
+    val gradleKeywords = "($testKeywords|implementation|api|annotationProcessor|classpath|kaptTest|kaptAndroidTest|kapt|check|ksp|coreLibraryDesugaring|detektPlugins)".toRegex()
 
     // ignore cases like kapt { correctErrorTypes = true } and apply plugin: ('kotlin-kapt") but pass kapt("...")
     // ignore keyWord followed by a space and a { or a " and a )
@@ -441,10 +441,10 @@ fun String.addEquals(): String {
 
     val compileSdk = "compileSdk"
     val signing = "keyAlias|keyPassword|storeFile|storePassword"
-    val other = "multiDexEnabled|correctErrorTypes|javaMaxHeapSize|jumboMode|dimension|useSupportLibrary"
+    val other = "multiDexEnabled|correctErrorTypes|javaMaxHeapSize|jumboMode|dimension|useSupportLibrary|kotlinCompilerExtensionVersion|isCoreLibraryDesugaringEnabled"
     val databinding = "dataBinding|viewBinding"
-    val defaultConfig = "applicationId|minSdk|targetSdk|versionCode|versionName|testInstrumentationRunner"
-    val negativeLookAhead = "(?!\\{)[^\\s]" // Don't want '{' as next word character
+    val defaultConfig = "applicationId|minSdk|targetSdk|versionCode|versionName|testInstrumentationRunner|namespace"
+    val negativeLookAhead = "(?!\\{)[^Version\\s]" // Don't want '{' as next word character
 
     val versionExp = """($compileSdk|$defaultConfig|$signing|$other|$databinding)\s*${negativeLookAhead}.*""".toRegex()
 
@@ -714,6 +714,13 @@ fun String.replaceColonWithEquals(): String {
     }
 }
 
+// coreLibraryDesugaringEnabled = true
+// becomes
+// isCoreLibraryDesugaringEnabled = true
+fun String.replaceCoreLibraryDesugaringEnabled(): String = this.replace(
+    oldValue = "coreLibraryDesugaringEnabled", newValue = "isCoreLibraryDesugaringEnabled"
+)
+
 print("[${currentTimeFormatted()}] -- Starting conversion.. ")
 
 val convertedText = textToConvert
@@ -730,6 +737,7 @@ val convertedText = textToConvert
         .convertVariantFilter()
         .convertAndroidBuildConfigFunctions()
         .convertCompileToImplementation()
+        .replaceCoreLibraryDesugaringEnabled()
         .convertDependencies()
         .convertMaven()
         .addParentheses()
@@ -751,6 +759,7 @@ val convertedText = textToConvert
         .convertExtToExtra()
         .addParenthesisToId()
         .replaceColonWithEquals()
+
 
 println("Success!")
 
