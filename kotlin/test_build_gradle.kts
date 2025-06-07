@@ -24,6 +24,30 @@ plugins {
 
 dependencies {
   ext {
+     plugins {
+    id("com.android.application")
+    id("kotlin-android")
+}
+apply(plugin = ("kotlin-kapt"))
+apply(plugin = ("kotlin-android-extensions"))
+
+dependencies {
+    classpath("com.android.tools.build:gradle:3.4.0-alpha10")
+    classpath(kotlin("gradle-plugin", version = "$KOTLIN_VERSION"))
+    classpath("com.bmuschko:gradle-nexus-plugin:2.3.1")
+    classpath("com.github.ben-manes:gradle-versions-plugin:0.20.0")
+}
+
+// this should not be converted to block, like the first ones
+apply(plugin = ("gms"))
+
+plugins {
+    id("io.gitlab.arturbosch.detekt") version "1.0.0.RC8"
+    id("io.gitlab.arturbosch.detekt")
+}
+
+dependencies {
+  ext {
      val test = "1.0.1"
   }
   val highdef = "1.1.0"
@@ -37,10 +61,6 @@ dependencies {
   testImplementation("com.randomDependency:1.0.0")
   compileOnly(group = "commons-io", name = "commons-io", version = "2.6")
   testCompileOnly(group = "org.apache.commons", name = "commons-math3", version = "3.6.1")
-  customFlavorImplementation "a.lib.com"
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
-  detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
-  ksp("com.squareup.moshi:moshi-kotlin-codegen:1.14.0")
 }
 
 testImplementation(group = "junit", name = "junit", version = "4.12")
@@ -96,22 +116,21 @@ defaultConfig {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 }
 buildTypes {
-    named("release") {
-        multiDexEnabled = true
+    named("release"){
         isDebuggable = false
         isMinifyEnabled = true
         isShrinkResources = true
         setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         signingConfig = signingConfigs.getByName("release")
     }
-    named("debug") {
+    named("debug"){
         isDebuggable = true
         extra["alwaysUpdateBuildId"] = false
         extra["enableCrashlytics"] = false
     }
 }
 signingConfigs {
-    register("release") {
+    register("release"){
         storeFile = file(RELEASE_STORE_FILE)
         storePassword = RELEASE_STORE_PASSWORD
         keyAlias = RELEASE_KEY_ALIAS
@@ -122,41 +141,11 @@ kapt {
     correctErrorTypes = true
 }
 android {
-    namespace = "com.bernaferrari.sdkmonitor"
     lintOptions {
         isAbortOnError = false
     }
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("boolean", "BETA", "false")
-        manifestPlaceholders.putAll(mapOf("appIcon" to "@drawable/ic_launcher", "appRoundIcon" to "@null", "googleMapsKey" to "aNonKey"))
-        vectorDrawables.useSupportLibrary = true
-    }
-    flavorDimensions("brand", "releaseType")
-    productFlavors {
-        create("prod") {
-            dimension = "releaseType"
-            resValue("string", "myFieldName", "@string/app_name")
-            manifestPlaceholders.putAll(mapOf("appLabel" to "@string/activity_label", "deepLink" to "@string/deepLink"))
-        }
-    }
-    variantFilter { // variant -> - TODO Manually replace 'variant ->' variable with this, and setIgnore(true) with ignore = true
-
-        setIgnore(false)
-    }
-    dexOptions {
-        javaMaxHeapSize = "4g"
-        jumboMode = true
-    }
-    dataBinding {
-        isEnabled = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
-    }
 }
 compileOptions {
-    isCoreLibraryDesugaringEnabled = true
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }

@@ -251,8 +251,9 @@ fun String.convertCompileToImplementation(): String {
 // implementation(":epoxy-annotations")
 fun String.convertDependencies(): String {
 
-    val testKeywords = "testImplementation|androidTestImplementation|debugImplementation|compileOnly|testCompileOnly|runtimeOnly|developmentOnly"
-    val gradleKeywords = "($testKeywords|implementation|api|annotationProcessor|classpath|kaptTest|kaptAndroidTest|kapt|check|ksp|coreLibraryDesugaring|detektPlugins)".toRegex()
+    val testKeywords = "testImplementation|androidTestImplementation|debugImplementation|releaseImplementation|compileOnly|testCompileOnly|runtimeOnly|developmentOnly"
+    val gradleKeywords = "($testKeywords|implementation|api|annotationProcessor|classpath|kaptTest|kaptAndroidTest|kapt|check|ksp|coreLibraryDesugaring|detektPlugins|lintPublish|lintCheck)".toRegex()
+
 
     // ignore cases like kapt { correctErrorTypes = true } and apply plugin: ('kotlin-kapt") but pass kapt("...")
     // ignore keyWord followed by a space and a { or a " and a )
@@ -403,7 +404,7 @@ var showWarningGroovyVariables = false
 // compileSdkVersion(28)
 fun String.addParentheses(): String {
 
-    val sdkExp = "(compileSdkVersion|minSdkVersion|targetSdkVersion)\\s*([^\\s]*)(.*)".toRegex() // include any word, as it may be a variable
+    val sdkExp = "(compileSdkVersion|minSdkVersion|targetSdkVersion|consumerProguardFiles)\\s*([^\\s]*)(.*)".toRegex() // include any word, as it may be a variable
 
     return this.replace(sdkExp) {
         val groups = it.groupValues
@@ -640,7 +641,7 @@ fun String.convertExcludeGroups(): String {
 //
 // implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 // becomes
-// implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
+// implementation(kotlin("stdlib"))
 fun String.convertJetBrainsKotlin(): String {
 
     // if string is implementation("..."), this will extract only the ...
@@ -659,7 +660,7 @@ fun String.convertJetBrainsKotlin(): String {
 
         if ("stdlib" in substring) {
             shouldImportKotlinCompiler = true
-            "kotlin(\"stdlib\", KotlinCompilerVersion.VERSION)"
+            "kotlin(\"stdlib\")"
         } else if (splittedSubstring.size == 2) {
             "kotlin(\"${splittedSubstring[0]}\", version = \"${splittedSubstring[1]}\")"
         } else {
@@ -667,11 +668,7 @@ fun String.convertJetBrainsKotlin(): String {
         }
     }
 
-    return if (shouldImportKotlinCompiler) {
-        "import org.jetbrains.kotlin.config.KotlinCompilerVersion\n\n" + newText
-    } else {
-        newText
-    }
+    return newText
 }
 
 
@@ -721,6 +718,20 @@ fun String.replaceCoreLibraryDesugaringEnabled(): String = this.replace(
     oldValue = "coreLibraryDesugaringEnabled", newValue = "isCoreLibraryDesugaringEnabled"
 )
 
+// compose true
+// dataBinding false
+// becomes
+// compose = true
+// dataBinding = false
+fun String.convertBuildFeatures(): String {
+    val buildFeatures = "(dataBinding|viewBinding|aidl|buildConfig|prefab|renderScript|resValues|shaders|compose)"
+    val state = "(false|true)"
+
+    return this.replace("$buildFeatures\\s$state".toRegex()) { result ->
+    result.value.replace(" ", " = ")
+    }
+}
+
 print("[${currentTimeFormatted()}] -- Starting conversion.. ")
 
 val convertedText = textToConvert
@@ -759,6 +770,7 @@ val convertedText = textToConvert
         .convertExtToExtra()
         .addParenthesisToId()
         .replaceColonWithEquals()
+        .convertBuildFeatures()
 
 
 println("Success!")
